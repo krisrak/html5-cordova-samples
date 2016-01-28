@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <script src="cordova.js"></script>
+    <script>
+
+document.addEventListener("deviceready", function(){
+
+}, false);  
+        
+function getData(){
+    document.getElementById("list").innerHTML = "<p class='status'>Loading...</p>";
+    // oData sample API
+    var url = "http://services.odata.org/V4/Northwind/Northwind.svc/Products?$format=json";
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = function() {
+        if(req.readyState == 4){
+            if (req.status == 200) {
+                writeFile(req.responseText);
+                displayData(JSON.parse(req.responseText));
+            } else {
+                displayDataFromFile();
+            }
+        }
+    };
+    req.timeout = 10000;
+    req.open('GET', url, true);
+    req.send();    
+}   
+        
+function writeFile(data){
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dir){
+            dir.getFile("data.json", {create: true}, function(fileEntry){
+                fileEntry.createWriter(function(fileWriter){
+                    fileWriter.write(data);
+                }, function(error){
+                    alert("Error: " + error.code);
+                });
+            }, function(error){
+                alert("Error: " + error.code);
+            });
+    }, function(){
+        alert("Error");
+    });
+}
+        
+function displayData(data, isFromFile){
+    var list = "<p class='status'>Updated: " + new Date() + "</p>";
+    if(isFromFile){
+        list = "<p class='warning'>No Internet, Showing Offline Data</p>"
+    }
+    for(var i=0;i<data.value.length;i++){
+        list += "<p class='listItem'>" + data.value[i].ProductName + "</p>";
+    }
+    document.getElementById("list").innerHTML = list;
+} 
+        
+function displayDataFromFile(){
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dir){
+            dir.getFile("data.json", {create: true}, function(fileEntry){
+                fileEntry.file(function(file){
+                    var reader = new FileReader();
+                    reader.onloadend = function (evt) {
+                        displayData(JSON.parse(evt.target.result), true);
+                    };
+                    reader.readAsText(file);
+                }, function(error){
+                    alert("Error: " + error.code);
+                });
+            }, function(error){
+                alert("Error: " + error.code);
+            });
+    }, function(){
+        alert("Error");
+    });
+}         
+        
+    </script>
+    
+    <style>
+        body {font-family: arial; margin:0}
+        .header {text-align:center}
+        button {font-size: 20px; padding:12px}
+        input {font-size: 20px; padding:10px}
+        .warning {padding: 10px; background-color: #daa; font-size: 12px; text-align:center}
+        .status {padding: 10px; background-color: #eee; font-size: 12px; text-align:center}
+        .listItem {padding: 10px;border-top:1px solid #777}
+    </style>
+</head>
+
+<body>
+
+    <br>
+    <div class="header">
+        <h1>NorthWind Products</h1>
+        <button onclick="getData()">Get Product List</button>
+    </div>    
+    <br>
+    <br>
+    <div id="list"></div>
+
+</body>
+</html>

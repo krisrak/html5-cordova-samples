@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <script src="cordova.js"></script>
+    <script>
+
+// make sure cordova-plugin-file is added and should be tested on device
+        
+        
+document.addEventListener("deviceready", function(){
+
+}, false);  
+        
+        
+function writeFile(){
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dir){
+            dir.getFile("log.txt", {create: true}, function(fileEntry){
+                fileEntry.createWriter(function(fileWriter){
+                    fileWriter.seek(fileWriter.length);
+                    fileWriter.write( document.getElementById("text").value + "\n");
+                    alert("file written");
+                }, function(error){
+                    alert("Error: " + error.code);
+                });
+            }, function(error){
+                alert("Error: " + error.code);
+            });
+    }, function(){
+        alert("Error");
+    });
+}
+        
+function readFile(){
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dir){
+            dir.getFile("log.txt", {create: true}, function(fileEntry){
+                fileEntry.file(function(file){
+                    var reader = new FileReader();
+                    reader.onloadend = function (evt) {
+                        alert(evt.target.result);
+                    };
+                    reader.readAsText(file);
+                }, function(error){
+                    alert("Error: " + error.code);
+                });
+            }, function(error){
+                alert("Error: " + error.code);
+            });
+    }, function(){
+        alert("Error");
+    });
+}      
+        
+function removeFile(){
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(dir){
+            dir.getFile("log.txt", {create: false}, function(fileEntry){
+                fileEntry.remove(function(){
+                    alert("file removed");
+                }, function(error){
+                    alert("Error: " + error.code);
+                });
+            }, function(error){
+                alert("Error: " + error.code);
+            });
+    }, function(){
+        alert("Error");
+    });    
+}    
+       
+    </script>
+    
+    <style>
+        body {font-family: arial}
+        button {font-size: 20px; padding:12px}
+        input {font-size: 20px; padding:10px}
+    </style>
+</head>
+
+<body>
+    
+    <br>
+    <h1>Cordova File API</h1>
+    <input id="text" placeholder="enter text to write" />
+    <button onclick="writeFile()">Write File</button>
+    <br>
+    <br>
+    <button onclick="readFile()">Read File</button>
+    <br>
+    <br>
+    <button onclick="removeFile()">Remove File</button>
+    
+</body>
+</html>

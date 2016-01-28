@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <script src="cordova.js"></script>
+    <script>
+
+document.addEventListener("deviceready", function(){
+    
+    document.getElementById("name").innerHTML = window.localStorage.getItem("name");
+    
+}, false);  
+        
+
+function setName(){     
+    window.localStorage.setItem("name", document.getElementById("input").value);
+    alert("Name added to localStorage");
+}
+        
+function getName(){
+    alert(window.localStorage.getItem("name"));
+}        
+        
+    </script>
+    
+    <style>
+        body {font-family: arial}
+        input {padding:10px;font-size: 20px}
+        button {padding:12px;font-size: 20px}
+    </style>    
+</head>
+
+<body>
+    
+    <br>
+    <h1>Welcome <span id="name"></span></h1>
+    <br>
+    <input id="input" placeholder="What is your name?"/>
+    <button onclick="setName()">Save</button>
+    <br>
+    <br>
+    <button onclick="getName()">Get the Name</button>
+
+</body>
+</html>
