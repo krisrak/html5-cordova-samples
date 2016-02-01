@@ -6,4 +6,4 @@
 
 [file/](https://github.com/krisrak/html5-cordova-samples/tree/master/file) - Sample app to create, write, read or remove a file using File API
 
-[file-json/](https://github.com/krisrak/html5-cordova-samples/tree/master/file-json) - Sample app showing how REST API data can be save to a file and to retrieve data when device is offline
+[file-json/](https://github.com/krisrak/html5-cordova-samples/tree/master/file-json) - Sample app showing how REST API response data can be saved to a file and retrieve data from file if device is offline
